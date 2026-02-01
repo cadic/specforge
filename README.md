@@ -25,29 +25,29 @@ SpecForge separates **thinking** from **coding** into two distinct stages:
 │ Statement       │
 └────────┬────────┘
          ▼
-┌─────────────────────────────────────┐
+┌──────────────────────────────────────┐
 │  Stage 1: Solution Space Exploration │
 │  (High-reasoning model)              │
-├─────────────────────────────────────┤
+├──────────────────────────────────────┤
 │ • Clarifies requirements             │
 │ • Proposes 2–4 approaches            │
 │ • Compares trade-offs                │
 │ • You choose one                     │
-└────────┬────────────────────────────┘
+└────────┬─────────────────────────────┘
          ▼
 ┌─────────────────┐
 │ Execution-Spec  │◄── Detailed, unambiguous specification
 └────────┬────────┘
          ▼
-┌─────────────────────────────────────┐
+┌──────────────────────────────────────┐
 │  Stage 2: Implementation             │
 │  (Coding model)                      │
-├─────────────────────────────────────┤
+├──────────────────────────────────────┤
 │ • Follows spec exactly               │
 │ • No architectural decisions         │
 │ • No unrequested improvements        │
 │ • Asks if unclear, doesn't guess     │
-└────────┬────────────────────────────┘
+└────────┬─────────────────────────────┘
          ▼
 ┌─────────────────┐
 │ Working Code    │
