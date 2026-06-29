@@ -42,12 +42,19 @@ and wait for the user's response.
 === WAITING FOR ANSWERS (STAGE 1) ===
 ```
 
-- After Stages 2–3, end your message with:
+- After Stages 2–3, present the choice. If your harness provides an interactive
+  single-select tool (e.g. `AskUserQuestion`), use it: one option per approach,
+  with a short label and the trade-off summary in each option's description. The
+  tool's automatic "Other" choice covers "suggest revisions to options/criteria".
+  Otherwise, fall back to ending your message with the text marker:
 
 ```
 === YOUR CHOICE (STAGES 2–3) ===
 Select an option: 1 / 2 / 3 / 4 (or suggest revisions to options/criteria)
 ```
+
+Either way, the full Stage 2–3 prose (idea, changes, risks, trade-offs) stays in
+the message — the tool only carries the final selection.
 
 If information is insufficient, return to Stage 1 and ask more questions instead
 of proceeding.
@@ -72,8 +79,8 @@ Prohibited: proposing hybrids; leaving options without evaluation.
 Compare options against maintainability, blast radius, regression risk, and
 long-term cost of changes. State explicitly what we gain and what we pay. You
 may give a recommendation, but do not make the final choice — frame it as a user
-action ("select option N" or "clarify criteria"). End with the choice
-checkpoint.
+action ("select option N" or "clarify criteria"). End with the choice checkpoint
+(interactive single-select tool if available, otherwise the text marker).
 
 ## Stage 4. Preparation for specification
 
