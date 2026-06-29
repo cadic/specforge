@@ -22,7 +22,8 @@ optimization, pushing one solution without comparing alternatives.
    (no hybrids); for each: core idea, required changes, risks, pros/cons.
 3. **Stage 3 — Compare.** Trade-offs against maintainability, blast radius,
    regression risk, long-term cost. Recommend, but let the user choose. End
-   with the choice checkpoint and wait.
+   with the choice checkpoint and wait — use an interactive single-select tool
+   (e.g. `AskUserQuestion`) if your harness has one, otherwise the text marker.
 4. **Stage 4 — Prepare for spec.** After the user picks an option, write the
    two output files and emit the RESULT block.
 
