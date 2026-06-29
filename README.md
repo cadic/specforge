@@ -11,24 +11,6 @@ across three stages:
 The methodology is authored once and runs in any `SKILL.md`-compatible coding
 agent.
 
-## How it is structured
-
-```
-skills/
-  specforge/          # orchestrator: scaffolding, phase detection, routing (bash)
-  specforge-explore/  # Stage 1 (prose, high-reasoning)
-  specforge-spec/     # Stage 2 (prose, high-reasoning) + 04 template
-  specforge-execute/  # Stage 3 (prose, coding model)
-```
-
-- **Skills live in the agent** (its global skills directory).
-- **Artifacts live in your project**: `docs/specforge/<task-slug>/` (override the
-  root with a `.specforge.json` at your repo root: `{ "task_root": "..." }`).
-
-State lives in the filesystem. `skills/specforge/scripts/sf-status.sh` derives
-the current phase from which `0X-*.md` files exist, so you can stop after any
-stage and resume later — even in a different agent.
-
 ## Install
 
 SpecForge installs with one command via the cross-agent
@@ -70,6 +52,38 @@ directories into your agent's global skills directory by hand, e.g.
 2. It scaffolds `docs/specforge/<slug>/01-problem-statement.md` — fill it in.
 3. It detects the phase and routes you through Explore → Spec → Execute,
    stopping at checkpoints for your input.
+
+## Configuration
+
+SpecForge needs no configuration to run. By default, task artifacts live in
+`docs/specforge/<task-slug>/`.
+
+To put them elsewhere, add a `.specforge.json` at your repo root with a
+`task_root` key:
+
+```json
+{ "task_root": "coding-assistant/tasks" }
+```
+
+`task_root` is the only recognized key (v1); it defaults to `docs/specforge`.
+
+## How it works
+
+```
+skills/
+  specforge/          # orchestrator: scaffolding, phase detection, routing (bash)
+  specforge-explore/  # Stage 1 (prose, high-reasoning)
+  specforge-spec/     # Stage 2 (prose, high-reasoning) + 04 template
+  specforge-execute/  # Stage 3 (prose, coding model)
+```
+
+- **Skills live in the agent** (its global skills directory).
+- **Artifacts live in your project** under the configured task root (see
+  [Configuration](#configuration)).
+
+State lives in the filesystem. `skills/specforge/scripts/sf-status.sh` derives
+the current phase from which `0X-*.md` files exist, so you can stop after any
+stage and resume later — even in a different agent.
 
 ## Coding standards
 
