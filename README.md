@@ -1,147 +1,90 @@
 # SpecForge
 
-A structured methodology for AI-assisted software development using a two-stage pipeline: **reasoning model → specification → coding model**.
+A spec-driven methodology for AI-assisted development, packaged as an
+**agent skillset**. SpecForge separates **reasoning** from **implementation**
+across three stages:
 
-## The Problem
+1. **Explore** — solution-space exploration with a high-reasoning model.
+2. **Spec** — generate an unambiguous Execution-Spec.
+3. **Execute** — implement strictly from the spec with a coding model.
 
-AI coding assistants often produce inconsistent results when given vague requirements. They may:
-- Make architectural decisions "on the fly"
-- Add unrequested improvements
-- Interpret ambiguous requirements differently each time
-- Skip edge cases not explicitly mentioned
+The methodology is authored once and runs in any `SKILL.md`-compatible coding
+agent.
 
-## The Solution
-
-SpecForge separates **thinking** from **coding** into two distinct stages:
-
-1. **Solution Space Exploration** — A high-reasoning model asks questions, proposes multiple approaches, compares trade-offs, and helps you choose the best option
-2. **Execution** — A coding model implements strictly according to a detailed specification, without interpretation or "improvements at discretion"
-
-## Workflow
+## How it is structured
 
 ```
-┌─────────────────┐
-│ Problem         │
-│ Statement       │
-└────────┬────────┘
-         ▼
-┌──────────────────────────────────────┐
-│  Stage 1: Solution Space Exploration │
-│  (High-reasoning model)              │
-├──────────────────────────────────────┤
-│ • Clarifies requirements             │
-│ • Proposes 2–4 approaches            │
-│ • Compares trade-offs                │
-│ • You choose one                     │
-└────────┬─────────────────────────────┘
-         ▼
-┌─────────────────┐
-│ Execution-Spec  │◄── Detailed, unambiguous specification
-└────────┬────────┘
-         ▼
-┌──────────────────────────────────────┐
-│  Stage 2: Implementation             │
-│  (Coding model)                      │
-├──────────────────────────────────────┤
-│ • Follows spec exactly               │
-│ • No architectural decisions         │
-│ • No unrequested improvements        │
-│ • Asks if unclear, doesn't guess     │
-└────────┬─────────────────────────────┘
-         ▼
-┌─────────────────┐
-│ Working Code    │
-└─────────────────┘
+skills/
+  specforge/          # orchestrator: scaffolding, phase detection, routing (bash)
+  specforge-explore/  # Stage 1 (prose, high-reasoning)
+  specforge-spec/     # Stage 2 (prose, high-reasoning) + 04 template
+  specforge-execute/  # Stage 3 (prose, coding model)
 ```
 
-## Key Principles
+- **Skills live in the agent** (its global skills directory).
+- **Artifacts live in your project**: `docs/specforge/<task-slug>/` (override the
+  root with a `.specforge.json` at your repo root: `{ "task_root": "..." }`).
 
-- **Separation of concerns**: Architecture decisions are made by humans with AI assistance, not delegated to a coding model
-- **Explicit over implicit**: Everything required must be documented; if it's not in the spec, it doesn't exist
-- **No "improvements at discretion"**: The executor follows the spec exactly
-- **Checkpoints**: Multiple review points before code is written
-- **Stack-agnostic**: Core templates work with any tech stack; coding standards live in your `AGENTS.md`
+State lives in the filesystem. `skills/specforge/scripts/sf-status.sh` derives
+the current phase from which `0X-*.md` files exist, so you can stop after any
+stage and resume later — even in a different agent.
 
-## Files
+## Install
 
-| File | Purpose |
-|------|---------|
-| `01-problem-statement.md` | Template for describing your task |
-| `prompt-solution-space.md` | Prompt for Stage 1: Solution Space Exploration |
-| `prompt-execution-spec.md` | Prompt for Stage 2: Generate Execution-Spec |
-| `04-execution-spec.md` | Execution-Spec template (stack-agnostic) |
-| `AGENTS.example.md` | Example coding standards (WordPress/PHP) |
+SpecForge installs with one command via the cross-agent
+[`skills` CLI](https://github.com/vercel-labs/skills) — no clone, no config. It
+auto-discovers the `skills/` directory in this repo, so there is nothing to set
+up on our side.
 
-## Task Directory Structure
+**opencode (v1):**
 
-For each task, create a directory with:
-
-```
-task-directory/
-├── 01-problem-statement.md    # Your raw problem description
-├── 02-solution-options.md     # Generated: reviewed approaches
-├── 03-solution-hld.md         # Generated: chosen solution summary
-├── 04-execution-spec.md       # Generated: detailed specification
-├── AGENTS.md                  # Your coding standards (copy from example)
-└── chats/
-    ├── 01-solution-options-chat-1.md
-    └── 02-execution-spec-chat-1.md
+```bash
+npx skills add cadic/specforge -a opencode -g --skill '*'
 ```
 
-## Quick Start
+`-a opencode` targets opencode, `-g` installs globally (into
+`~/.config/opencode/skills/`), and `--skill '*'` installs all four SpecForge
+skills.
 
-1. Create a task directory
-2. Copy `AGENTS.example.md` → `AGENTS.md` and adapt to your tech stack
-3. Write your problem statement in `01-problem-statement.md` (stream of consciousness is fine)
-4. Copy the templates to your task directory
-5. Send `prompt-solution-space.md` to a high-reasoning model
-6. Answer questions, review options, choose an approach
-7. Send `prompt-execution-spec.md` to generate the detailed Execution-Spec
-8. Review the spec carefully
-9. Send the spec to a coding model with "implement this specification"
-10. Review the implementation
+The same command works for any of the 70+ agents the CLI supports — swap the
+agent name:
 
-## AGENTS.md
+```bash
+npx skills add cadic/specforge -a claude-code -g --skill '*'
+npx skills add cadic/specforge -a codex -g --skill '*'
+```
 
-The `AGENTS.md` file contains coding standards and patterns for the AI to follow. The included example covers WordPress/PHP, but you should create your own for your stack:
+For Cursor (no global skills dir), install into the project instead (drop `-g`):
 
-- Naming conventions
-- Security patterns
-- Formatting rules
-- Testing setup
-- Common pitfalls to avoid
+```bash
+npx skills add cadic/specforge -a cursor --skill '*'
+```
 
-**When the AI makes recurring mistakes, add a rule to `AGENTS.md`.**
+**Manual fallback (zero dependencies):** copy the four `skills/specforge*`
+directories into your agent's global skills directory by hand, e.g.
+`cp -r skills/specforge* ~/.config/opencode/skills/`.
 
-### Examples for Other Stacks
+## Using it
 
-Your `AGENTS.md` might include:
+1. In your agent, invoke the **specforge** skill and give it a task slug.
+2. It scaffolds `docs/specforge/<slug>/01-problem-statement.md` — fill it in.
+3. It detects the phase and routes you through Explore → Spec → Execute,
+   stopping at checkpoints for your input.
 
-**TypeScript/React:**
-- Component file naming (`PascalCase.tsx`)
-- Hook patterns (`use` prefix)
-- State management conventions
-- Testing with Jest/React Testing Library
+## Coding standards
 
-**Python/Django:**
-- PEP 8 compliance
-- Model naming conventions
-- View/serializer patterns
-- pytest configuration
+SpecForge does not ship an `AGENTS.md`. Stage 3 follows your project's own
+`AGENTS.md`/`CLAUDE.md`. See
+[docs/writing-agents-md-for-specforge.md](docs/writing-agents-md-for-specforge.md).
 
-**Go:**
-- Package naming
-- Error handling patterns
-- Interface conventions
-- Testing with `go test`
+## Development
 
-## Effectiveness
+Bash helpers are tested with [bats-core](https://github.com/bats-core/bats-core):
 
-Subjective observations from usage:
-
-- **Design stage**: More effective than solo work — helps avoid analysis paralysis and documents decisions properly
-- **Implementation stage**: Comparable to manual coding when in flow; faster when fatigued
-- **vs. junior developers**: Significantly more effective — AI follows existing code patterns better and doesn't need extensive onboarding
+```bash
+brew install bats-core
+bats tests/
+```
 
 ## License
 
