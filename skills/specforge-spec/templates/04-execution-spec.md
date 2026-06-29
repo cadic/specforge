@@ -33,7 +33,7 @@ Implement the functionality *strictly in accordance* with this document.
 - treat this document as the *single source of truth*;
 - if a requirement is not described — assume it **does not exist**;
 - in case of ambiguity — **ask a question**, do not guess;
-- follow coding standards defined in `AGENTS.md`.
+- follow coding standards defined in the project's `AGENTS.md`/`CLAUDE.md`.
 
 ---
 
@@ -200,10 +200,10 @@ Explicitly prohibited:
 
 ### 8.3 Coding Standards
 
-Follow the coding standards defined in `AGENTS.md`. Key points:
+Follow the coding standards defined in the project's `AGENTS.md`/`CLAUDE.md`. Key points:
 
-- <standard 1 from AGENTS.md relevant to this task>
-- <standard 2 from AGENTS.md relevant to this task>
+- <standard 1 relevant to this task>
+- <standard 2 relevant to this task>
 
 ---
 
