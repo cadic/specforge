@@ -115,6 +115,6 @@ Formatting: markdown; one sentence per line; one statement per list item.
 1. Write all reviewed options (final form from Stages 2–3) to
    `02-solution-options.md`.
 2. Write the RESULT block (no extra comments) to `03-solution-hld.md`.
-3. Output the RESULT block to chat unchanged.
+3. In chat, report only the file paths written. Do not paste the block.
 
 This block is the input to Stage 2 (specforge-spec).

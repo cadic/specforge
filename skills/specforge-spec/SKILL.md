@@ -13,21 +13,25 @@ ambiguity causes wrong implementation.
 decisions only; leave no ambiguities; if in doubt, choose one solution and
 document it.
 
-## Procedure at a glance
+## Procedure
 
 1. Read `03-solution-hld.md` (must contain the `=== RESULT FOR EXECUTION-SPEC
    ===` block) and the template `templates/04-execution-spec.md`.
-2. If facts are missing, ask clarifying questions and stop — end with
-   `=== WAITING FOR ANSWERS (EXECUTION-SPEC) ===`.
+2. If the input block is missing, contradictory, or facts are missing to fill
+   any section, ask clarifying questions (without proposing solutions) and stop
+   — end your message with `=== WAITING FOR ANSWERS (EXECUTION-SPEC) ===`.
 3. Fill **all** sections of the template. Use imperative wording (must,
    prohibited, only, always/never). Add no new sections. Leave no placeholders.
-4. Write the result to `04-execution-spec.md` in the task dir.
+   Self-check: the text must not contain `❌`, `<...>`, `TBD`, empty list items,
+   or empty table cells; the task aligns with the actual code and is internally
+   consistent.
+4. Write the result to `04-execution-spec.md` in the task dir as a single
+   document, ready for handoff to the executor.
 5. **Self-check** — run the validator:
 
    `bash <orchestrator>/scripts/sf-validate.sh <task-dir>/04-execution-spec.md`
 
    It must print `sf-validate: OK`. If it reports placeholders, empty cells, or
    empty list items, fix them and re-run until clean.
-6. Output the same final document to chat with no additions.
-
-For the full generate-spec prompt, read `references/process.md`.
+6. In chat, report only the written file path and the validator result. Do not
+   paste the document into chat.
